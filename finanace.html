@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 20px;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+.tab {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+.tab.active {
+  background-color: #eee;
+}
+.input-area {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+label {
+  margin-bottom: 5px;
+}
+input[type="number"] {
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+.summary {
+  display: flex;
+  justify-content: space-around;
+  width: 60%;
+}
+.box {
+  border: 1px solid #ccc;
+  padding: 20px;
+  text-align: center;
+}
+#balance {
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="tabs">
+    <div class="tab active">Dashboard</div>
+    <div class="tab">Expenses</div>
+    <div class="tab">Income</div>
+  </div>
+
+  <div class="input-area">
+    <label for="income">Income:</label>
+    <input type="number" id="income" value="0">
+
+    <label for="expenses">Expenses:</label>
+    <input type="number" id="expenses" value="0">
+  </div>
+
+  <div class="summary">
+    <div class="box">
+      <h3>Total Income</h3>
+      <p id="totalIncome">$0</p>
+    </div>
+    <div class="box">
+      <h3>Total Expenses</h3>
+      <p id="totalExpenses">$0</p>
+    </div>
+    <div class="box">
+      <h3>Balance</h3>
+      <p id="balance">$0</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const incomeInput = document.getElementById('income');
+const expensesInput = document.getElementById('expenses');
+const totalIncomeDisplay = document.getElementById('totalIncome');
+const totalExpensesDisplay = document.getElementById('totalExpenses');
+const balanceDisplay = document.getElementById('balance');
+
+let totalIncome = 0;
+let totalExpenses = 0;
+
+incomeInput.addEventListener('input', updateTotals);
+expensesInput.addEventListener('input', updateTotals);
+
+function updateTotals() {
+  totalIncome = parseFloat(incomeInput.value) || 0;  // Parse or default to 0
+  totalExpenses = parseFloat(expensesInput.value) || 0; // Parse or default to 0
+
+  totalIncomeDisplay.textContent = `$${totalIncome.toFixed(2)}`;
+  totalExpensesDisplay.textContent = `$${totalExpenses.toFixed(2)}`;
+
+  const balance = totalIncome - totalExpenses;
+  balanceDisplay.textContent = `$${balance.toFixed(2)}`;
+
+  // Update the color of the balance based on its value:
+  if (balance < 0) {
+    balanceDisplay.style.color = 'red';
+  } else {
+    balanceDisplay.style.color = 'green';
+  }
+}
+
+// Initial calculation:
+updateTotals(); 
+</script>
+
+</body>
+</html>
