@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="weatherApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #6a82fb, #fc5c7d); /* Updated gradient background */
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            width: 80%;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #fff;
+            font-size: 16px;
+            color: #333;
+            background: #fff;
+        }
+
+        button {
+            background-color: #ff6f00;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #e64a19;
+        }
+
+        .weather-container {
+            margin-top: 25px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .weather-container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .weather-container p {
+            font-size: 1.3rem;
+            margin: 5px 0;
+        }
+
+        .error {
+            color: #ff5733;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            input[type="text"] {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body ng-controller="WeatherController">
+    <div class="container">
+        <h1>Weather Dashboard</h1>
+        <input type="text" ng-model="city" placeholder="Enter city in India" />
+        <button ng-click="getWeather()">Get Weather</button>
+
+        <div class="weather-container" ng-if="weather">
+            <h2>{{ weather.location.name }}, {{ weather.location.region }}</h2>
+            <p><strong>Temperature:</strong> {{ weather.current.temp_c }} &#8451;</p>
+            <p><strong>Humidity:</strong> {{ weather.current.humidity }}%</p>
+            <p><strong>Conditions:</strong> {{ weather.current.condition.text }}</p>
+        </div>
+
+        <p class="error" ng-if="error">{{ error }}</p>
+        <p>Powered by <a href="https://www.weatherapi.com/" target="_blank" style="color: #ff9800;">WeatherAPI</a></p>
+    </div>
+
+    <script>
+        var app = angular.module('weatherApp', []);
+        app.controller('WeatherController', function($scope, $http) {
+            $scope.getWeather = function() {
+                var apiKey = '110b398730724b668a5104145250302';
+                var url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${$scope.city}`;
+                
+                $http.get(url).then(function(response) {
+                    $scope.weather = response.data;
+                    $scope.error = '';
+                }, function(error) {
+                    $scope.weather = null;
+                    $scope.error = 'City not found or API error';
+                });
+            };
+        });
+    </script>
+</body>
+</html>
